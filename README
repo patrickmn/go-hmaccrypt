@@ -41,7 +41,7 @@ if err != nil {
 }
 // save the bcrypt digest in the database
 
-if err := c.BcryptCompare(digest, password); err == nil {
+if err := crypt.BcryptCompare(digest, password); err == nil {
 	// the password is a match
 	...
 }
