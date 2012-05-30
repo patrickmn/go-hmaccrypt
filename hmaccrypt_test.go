@@ -30,7 +30,7 @@ func TestHmaccrypt(t *testing.T) {
 		t.Fatalf("Error running oc.bcrypt: %v", err)
 	}
 
-	// Real digests should match
+	// Same-password digests should match
 	if err := c.BcryptCompare(bd, pw); err != nil {
 		t.Errorf("no c/bd/pw bcrypt match: %v", err)
 	}
@@ -43,21 +43,22 @@ func TestHmaccrypt(t *testing.T) {
 		t.Error("bd/opw bcrypt match")
 	}
 
-	// Real digests from a HmacCrypt using the same hash function and pepper
-	// should match
+	// Same-password digests from a HmacCrypt using the same hash function
+	// and pepper should match
 	nc := New(sha512.New, p)
 	if err := nc.BcryptCompare(bd, pw); err != nil {
 		t.Error("no nc/bd/pw bcrypt match")
 	}
 
-	// Real digests from a HmacCrypt using another hash function and the
-	// same pepper should not match
+	// Same-password digests from a HmacCrypt using another hash function
+	// and the same pepper should not match
 	onc := New(sha256.New, p)
 	if err := onc.BcryptCompare(bd, pw); err == nil {
 		t.Error("onc/bd/pw bcrypt match")
 	}
 
-	// Real digests from a HmacCrypt using another pepper should not match
+	// Same-password digests from a HmacCrypt using another pepper should
+	// not match
 	if err := c.BcryptCompare(obd, pw); err == nil {
 		t.Error("c/obd/pw bcrypt match (hmac with another pepper)")
 	}
