@@ -38,7 +38,7 @@ func TestHmaccrypt(t *testing.T) {
 		t.Errorf("no c/obd/pw bcrypt match: %v", err)
 	}
 
-	// Real digests with another password should not match
+	// Digests of different passwords should not match
 	if err := c.BcryptCompare(bd, []byte("f00b4r?")); err == nil {
 		t.Error("bd/opw bcrypt match")
 	}
