@@ -3,6 +3,7 @@ package hmaccrypt
 import (
 	"code.google.com/p/go.crypto/bcrypt"
 	"crypto/rand"
+	"crypto/sha256"
 	"crypto/sha512"
 	"io"
 	"testing"
@@ -39,14 +40,28 @@ func TestHmaccrypt(t *testing.T) {
 
 	// Real digests with another password should not match
 	if err := c.BcryptCompare(bd, []byte("f00b4r?")); err == nil {
-		t.Errorf("bd/opw match")
+		t.Error("bd/opw bcrypt match")
 	}
 
-	// Digests from a HmacCrypt using another pepper should not match
+	// Real digests from a HmacCrypt using the same hash function and pepper
+	// should match
+	nc := New(sha512.New, p)
+	if err := nc.BcryptCompare(bd, pw); err != nil {
+		t.Error("no nc/bd/pw bcrypt match")
+	}
+
+	// Real digests from a HmacCrypt using another hash function and the
+	// same pepper should not match
+	onc := New(sha256.New, p)
+	if err := onc.BcryptCompare(bd, pw); err == nil {
+		t.Error("onc/bd/pw bcrypt match")
+	}
+
+	// Real digests from a HmacCrypt using another pepper should not match
 	if err := c.BcryptCompare(obd, pw); err == nil {
-		t.Errorf("c/obd/pw bcrypt match on hmac with another pepper")
+		t.Error("c/obd/pw bcrypt match (hmac with another pepper)")
 	}
 	if err := oc.BcryptCompare(bd, pw); err == nil {
-		t.Errorf("oc/bd/pw bcrypt match on hmac with another pepper")
+		t.Error("oc/bd/pw bcrypt match (hmac with another pepper)")
 	}
 }
