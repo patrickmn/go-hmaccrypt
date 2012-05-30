@@ -1,6 +1,6 @@
 go-hmaccrypt provides very strong password digests using a combination of a
-hash-based message authentication code (HMAC) and an adaptive key derivation
-function like bcrypt.
+peppered hash-based message authentication code (HMAC) and a salted adaptive
+key derivation function like bcrypt.
 
 A digest of each password is generated using e.g. HMAC-SHA512 with a pepper--a
 value stored separately from the final digests--after which a bcrypt digest
