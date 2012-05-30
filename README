@@ -1,0 +1,47 @@
+go-hmaccrypt provides very strong password digests using a combination of a
+hash-based message authentication code (HMAC) and an adaptive key derivation
+function like bcrypt.
+
+A digest of each password is generated using e.g. HMAC-SHA512 with a pepper--a
+value stored separately from the final digests--after which a bcrypt digest
+of the HMAC digest is generated. The bcrypt digest is saved in e.g. a database.
+
+With this approach, you can ensure the safety of user passwords even if an
+SQL injection compromises the contents of your database's users table, or if
+a weakness is found in e.g. bcrypt.
+
+This approach is described on
+https://wiki.mozilla.org/WebAppSec/Secure_Coding_Guidelines#Password_Storage
+
+go-hmaccrypt can be used safely by multiple goroutines.
+
+== Installation
+
+go get github.com/pmylund/go-hmaccrypt
+
+== Documentation
+
+go doc github.com/pmylund/go-hmaccrypt
+or http://go.pkgdoc.org/github.com/pmylund/go-hmaccrypt
+
+== Usage
+
+import (
+	"crypto/sha512"
+	"github.com/pmylund/go-hmaccrypt"
+)
+
+pepper := []byte("randomly generated sequence stored on disk or in the source")
+crypt := hmaccrypt.New(sha512.New, pepper)
+
+password := []byte("f00b4r!")
+digest, err := crypt.Bcrypt(password, 10)
+if err != nil {
+	...
+}
+// save the bcrypt digest in the database
+
+if err := c.BcryptCompare(digest, password); err == nil {
+	// the password is a match
+	...
+}
