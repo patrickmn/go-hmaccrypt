@@ -21,7 +21,7 @@ func (c *HmacCrypt) digest(data []byte) []byte {
 }
 
 // Generates a new bcrypt(HMAC-hash(password, pepper), salt(cost)) digest of a
-// password with the given bcrypt cost/work factor, e.g. bcrypt.DefaultCost.
+// password with a given bcrypt cost/work factor, e.g. 10 (bcrypt.DefaultCost).
 // Use BcryptCompare to compare a password to an existing digest.
 func (c *HmacCrypt) Bcrypt(password []byte, cost int) ([]byte, error) {
 	return bcrypt.GenerateFromPassword(c.digest(password), cost)
