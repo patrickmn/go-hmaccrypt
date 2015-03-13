@@ -69,7 +69,7 @@ func TestHmaccrypt(t *testing.T) {
 
 func TestBcryptNullCharacter(t *testing.T) {
 	var (
-		pass = []byte("abc\x00def")
+		pass    = []byte("abc\x00def")
 		notPass = []byte("abc\x00ghi")
 	)
 	passDigest, err := bcrypt.GenerateFromPassword(pass, bcrypt.MinCost)
