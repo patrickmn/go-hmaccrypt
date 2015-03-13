@@ -1,8 +1,8 @@
 package hmaccrypt
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"crypto/hmac"
+	"golang.org/x/crypto/bcrypt"
 	"hash"
 	"sync"
 )

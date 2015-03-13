@@ -1,10 +1,10 @@
 package hmaccrypt
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"crypto/rand"
 	"crypto/sha256"
 	"crypto/sha512"
+	"golang.org/x/crypto/bcrypt"
 	"io"
 	"testing"
 )
@@ -64,5 +64,19 @@ func TestHmaccrypt(t *testing.T) {
 	}
 	if err := oc.BcryptCompare(bd, pw); err == nil {
 		t.Error("oc/bd/pw bcrypt match (hmac with another pepper)")
+	}
+}
+
+func TestBcryptNullCharacter(t *testing.T) {
+	var (
+		pass = []byte("abc\x00def")
+		notPass = []byte("abc\x00ghi")
+	)
+	passDigest, err := bcrypt.GenerateFromPassword(pass, bcrypt.MinCost)
+	if err != nil {
+		t.Fatalf("Error hashing pass: %v", err)
+	}
+	if err = bcrypt.CompareHashAndPassword(passDigest, notPass); err == nil {
+		t.Error("pass matches notPass; please report this to the Go authors")
 	}
 }
